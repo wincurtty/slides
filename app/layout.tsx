@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter, JetBrains_Mono } from 'next/font/google'
-import 'katex/dist/katex.min.css'
 import './globals.css'
+import KaTeXLoader from '@/components/KaTeXLoader'
 
 const inter = Inter({ 
   subsets: ['latin', 'cyrillic'],
@@ -27,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="ru" className="dark">
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+        <KaTeXLoader />
         {children}
       </body>
     </html>
