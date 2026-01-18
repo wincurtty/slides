@@ -1,7 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import katex from 'katex'
 import { motion } from 'framer-motion'
 
 interface MathFormulaProps {
@@ -10,36 +8,45 @@ interface MathFormulaProps {
   delay?: number
 }
 
+// Простая функция для преобразования LaTeX-нотации в читаемый текст
+function latexToText(latex: string): string {
+  return latex
+    .replace(/\\mathbb\{N\}/g, 'ℕ')
+    .replace(/\\mathbb\{R\}/g, 'ℝ')
+    .replace(/\\mathbb\{Z\}/g, 'ℤ')
+    .replace(/\\mathbb\{Q\}/g, 'ℚ')
+    .replace(/\\in/g, ' ∈ ')
+    .replace(/\\notin/g, ' ∉ ')
+    .replace(/\\leq/g, ' ≤ ')
+    .replace(/\\geq/g, ' ≥ ')
+    .replace(/\\neq/g, ' ≠ ')
+    .replace(/\\approx/g, ' ≈ ')
+    .replace(/\\ldots/g, '…')
+    .replace(/\\cdots/g, '⋯')
+    .replace(/\\times/g, ' × ')
+    .replace(/\\div/g, ' ÷ ')
+    .replace(/\\pm/g, ' ± ')
+    .replace(/\\sum/g, '∑')
+    .replace(/\\prod/g, '∏')
+    .replace(/\\int/g, '∫')
+    .replace(/\\infty/g, '∞')
+    .replace(/\\pi/g, 'π')
+    .replace(/\\theta/g, 'θ')
+    .replace(/\\alpha/g, 'α')
+    .replace(/\\beta/g, 'β')
+    .replace(/\\gamma/g, 'γ')
+    .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '($1)/($2)')
+    .replace(/\\sqrt\{([^}]+)\}/g, '√($1)')
+    .replace(/\\sqrt\[([^\]]+)\]\{([^}]+)\}/g, '^($1)√($2)')
+    .replace(/\\^(\d+)/g, '^$1')
+    .replace(/\{([^}]+)\}/g, '$1')
+    .replace(/\\/g, '')
+    .trim()
+}
+
 export default function MathFormula({ formula, inline = false, delay = 0 }: MathFormulaProps) {
-  const [html, setHtml] = useState<string>('')
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    // Ensure formula is a single string without any whitespace issues
-    const cleanFormula = formula.trim().replace(/\s+/g, ' ')
-
-    try {
-      const rendered = katex.renderToString(cleanFormula, {
-        throwOnError: false,
-        errorColor: '#ef4444',
-        displayMode: !inline,
-      })
-      setHtml(rendered)
-      setError(null)
-    } catch (err) {
-      console.error('KaTeX parsing error:', err, 'Formula:', cleanFormula)
-      setError(`[Formula Error: ${cleanFormula}]`)
-      setHtml('')
-    }
-  }, [formula, inline])
-
-  if (error) {
-    return <span className="text-red-500">{error}</span>
-  }
-
-  if (!html) {
-    return null
-  }
+  const cleanFormula = formula.trim().replace(/\s+/g, ' ')
+  const textFormula = latexToText(cleanFormula)
 
   if (inline) {
     return (
@@ -47,10 +54,10 @@ export default function MathFormula({ formula, inline = false, delay = 0 }: Math
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3, delay }}
-        className="inline-block"
-        style={{ verticalAlign: 'baseline' }}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+        className="inline font-mono italic mx-1"
+      >
+        {textFormula}
+      </motion.span>
     )
   }
 
@@ -59,12 +66,11 @@ export default function MathFormula({ formula, inline = false, delay = 0 }: Math
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
-      className="my-4 w-full overflow-x-auto"
+      className="my-4 w-full flex justify-center items-center"
     >
-      <div 
-        className="flex justify-center items-center"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <div className="font-mono italic text-lg">
+        {textFormula}
+      </div>
     </motion.div>
   )
 }
