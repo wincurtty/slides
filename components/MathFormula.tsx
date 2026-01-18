@@ -1,7 +1,6 @@
 'use client'
 
 import { InlineMath, BlockMath } from 'react-katex'
-import 'katex/dist/katex.min.css'
 import { motion } from 'framer-motion'
 
 interface MathFormulaProps {
