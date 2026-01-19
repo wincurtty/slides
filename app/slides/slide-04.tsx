@@ -21,14 +21,14 @@ export default function Slide04() {
                   2, 4, 6, 8, 10, 12...
                 </p>
                 <p className="text-lg text-muted-foreground">
-                  Мы замечаем, что эти числа делятся на 2
+                  Мы замечаем, что все эти числа чётные (оканчиваются на 0, 2, 4, 6 или 8)
                 </p>
                 <div className="border-t border-border pt-4 mt-4">
                   <p className="text-xl text-foreground font-semibold">
-                    → Все чётные числа делятся на 2
+                    → Предполагаем, что все чётные числа делятся на 2
                   </p>
                   <p className="text-sm text-muted-foreground mt-2">
-                    Это индуктивный вывод: на основе наблюдений мы делаем общее предположение
+                    Это индуктивный вывод: на основе наблюдений частных случаев мы делаем общее предположение
                   </p>
                 </div>
               </div>
